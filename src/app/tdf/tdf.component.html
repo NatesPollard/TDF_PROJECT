@@ -1,13 +1,40 @@
-<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)" novalidate>
     <div>
       <label>Email:</label>
-      <input type="text" name="email" ngModel required email>
+      <input
+       type="text"
+       name="email" 
+       ngModel 
+       required 
+       email
+       #email="ngModel"
+       minlength="5"
+       maxlength="30">
+       <div *ngIf="email.invalid && (email.dirty || email.touched || userForm.submitted)">
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?.['email']">Invalid email format.</div>
+        <div *ngIf="email.errors?.['minlength']">Email must be at least 5 characters long.</div>
+        <div *ngIf="email.errors?.['maxlength']">Email cannot exceed 30 characters.</div>
+
+       </div>
     </div>
   
     <div>
       <label>Password:</label>
-      <input type="password" name="password" ngModel required>
+      <input
+       type="password"
+       name="password"
+       ngModel
+       required
+       #password="ngModel"
+       minlength="5"
+        maxlength="15">
+        <div *ngIf="password.invalid && (password.dirty || password.touched || userForm.submitted)">
+        <div *ngIf="password.errors?.['required']">Password is required.</div>
+        <div *ngIf="password.errors?.['minlength']">Password must be at least 5 characters long.</div>
+        <div *ngIf="password.errors?.['maxlength']">Password cannot exceed 15 characters.</div>
     </div>
+  </div>
   
     <div>
       <label>Gender:</label>
@@ -21,7 +48,11 @@
   
     <div>
       <label>Age:</label>
-      <input type="number" name="age" ngModel required>
+      <input type="number" name="age" ngModel required min="21" #age="ngModel">
+      <div *ngIf="age.invalid && (age.dirty || age.touched || userForm.submitted)">
+        <div *ngIf="age.errors?.['required']">Age is required.</div>
+        <div *ngIf="age.errors?.['min']">Age must be at least 21.</div>
+      </div>
     </div>
   
     <button type="submit" [disabled]="!userForm.valid">Submit</button>
